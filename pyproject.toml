@@ -1,0 +1,56 @@
+[project]
+name = "python-geo-devcontainer"
+version = "0.1.0"
+description = "Python geoprocessing devcontainer with GDAL and optional SNAP/snappy"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "gdal",
+    "rasterio",
+    "numpy",
+    "scipy",
+    "pyproj",
+    "shapely",
+    "fiona",
+]
+
+[tool.uv]
+# Provide numpy during GDAL build so gdal_array is compiled
+extra-build-dependencies = { gdal = ["numpy", "setuptools", "wheel"] }
+
+[tool.pytest.ini_options]
+pythonpath = ["src"]
+
+[tool.ruff]
+line-length = 140
+
+[tool.ruff.format]
+quote-style = "single"
+indent-style = "tab"
+docstring-code-format = false
+
+[tool.ruff.lint]
+select = ["ALL"]
+ignore = [
+  # Conflicting with formatter
+  "COM812", # missing-trailing-comma
+  "COM819", # prohibited-trailing-comma
+  "D206",   # docstring-tab-indentation
+  "D300",   # triple-single-quotes
+  "E111",   # indentation-with-invalid-multiple
+  "E114",   # indentation-with-invalid-multiple-comment
+  "E117",   # over-indented
+  "Q000",   # bad-quotes-inline-string
+  "Q001",   # bad-quotes-multiline-string
+  "Q002",   # bad-quotes-docstring
+  "Q003",   # avoidable-escaped-quote
+  "W191",   # tab-indentation
+  # Additional ignores
+  "D100",   # undocumented-public-module
+  "D203",   # no-blank-line-before-class
+  "D213",   # multi-line-summary-second-line
+]
+
+[tool.ruff.lint.per-file-ignores]
+"test/*" = ["S101"] # assert
+"__init__.py" = ["D104"]
