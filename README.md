@@ -2,12 +2,66 @@
 
 A VS Code devcontainer template for Python geoprocessing with GDAL, and optionally ESA SNAP/esa_snappy.
 
+## Prerequisites
+
+### Required Software
+
+1. **WSL2 (Windows Subsystem for Linux) or Linux**
+   - **Windows users**: Install WSL2 with Ubuntu
+     ```powershell
+     wsl --install
+     ```
+     See [WSL Installation Guide](https://docs.microsoft.com/en-us/windows/wsl/install)
+   - **Linux users**: Any modern Linux distribution
+
+2. **Docker Desktop**
+   - Download from [Docker Desktop](https://www.docker.com/products/docker-desktop/)
+   - Enable WSL2 backend (Windows)
+
+3. **Visual Studio Code**
+   - Download from [VS Code](https://code.visualstudio.com/)
+   - Install extensions:
+     - **Dev Containers** (`ms-vscode-remote.remote-containers`) - Required
+     - **WSL** (`ms-vscode-remote.remote-wsl`) - Required for Windows
+
+### WSL Setup (Windows)
+
+**Important**: Always clone repositories into the WSL filesystem, not Windows.
+
+1. **Set ONEDRIVE environment variable** in `~/.bashrc`:
+   ```bash
+   echo 'export ONEDRIVE="$(wslpath "$(cmd.exe /c echo %ONEDRIVE% 2>/dev/null | tr -d '\''\r'\'')")"' >> ~/.bashrc && source ~/.bashrc
+   ```
+
+2. **Copy SSH keys from Windows to WSL**:
+   ```bash
+   cp -r "$(wslpath "$(cmd.exe /c 'echo %USERPROFILE%' 2>/dev/null | tr -d '\r')")/.ssh" ~/.ssh && chmod 700 ~/.ssh && chmod 600 ~/.ssh/*
+   ```
+
+3. **Copy git config**:
+   ```bash
+   cp "$(wslpath "$(cmd.exe /c 'echo %USERPROFILE%' 2>/dev/null | tr -d '\r')")/.gitconfig" ~/.gitconfig
+   ```
+
+4. **Fix git credential helper for WSL**:
+   ```bash
+   git config --global credential.helper "/mnt/c/Users/$(cmd.exe /c 'echo %USERNAME%' 2>/dev/null | tr -d '\r')/AppData/Local/Programs/Git/mingw64/bin/git-credential-manager.exe"
+   ```
+
+5. **Create bash_aliases if it doesn't exist**:
+   ```bash
+   touch ~/.bash_aliases
+   ```
+
 ## Quick Start
 
-1. Open this folder in VS Code
-2. When prompted, click **"Reopen in Container"** (or run `Dev Containers: Reopen in Container` from the command palette)
-3. Wait for the container to build and dependencies to install
-4. Start coding!
+1. **Connect to WSL** (Windows users):
+   - Press `Ctrl+Shift+P` → "WSL: Connect to WSL"
+2. Clone the repository into WSL filesystem
+3. Open the folder in VS Code
+4. When prompted, click **"Reopen in Container"** (or `Ctrl+Shift+P` → `Dev Containers: Reopen in Container`)
+5. Wait for the container to build (first time takes longer)
+6. Start coding!
 
 ## Two Configurations
 
