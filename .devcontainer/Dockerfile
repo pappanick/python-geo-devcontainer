@@ -1,7 +1,9 @@
 FROM mcr.microsoft.com/devcontainers/python:3.12
 
-# Install uv system-wide
-RUN curl -LsSf https://astral.sh/uv/install.sh | env UV_INSTALL_DIR=/usr/local/bin sh
+ARG WORKSPACE=/workspaces/python-geo-devcontainer
+
+# Install uv from official image
+COPY --from=ghcr.io/astral-sh/uv:latest /uv /uvx /usr/local/bin/
 
 # Install GDAL and other geo dependencies
 RUN apt-get update && apt-get install -y --no-install-recommends \
@@ -34,5 +36,13 @@ ENV SNAP_HOME="/opt/snap"
 # Install esa-snappy from PyPI (new method for SNAP 10+)
 RUN pip install esa-snappy
 
-# Update SNAP modules (optional - can be slow)
-# RUN /opt/snap/bin/snap --nosplash --nogui --modules --update-all
+# Copy pyproject.toml and sync dependencies during build
+WORKDIR ${WORKSPACE}
+COPY pyproject.toml ./
+
+RUN chown -R vscode:vscode ${WORKSPACE}
+
+USER vscode
+RUN uv sync --verbose
+
+USER root
