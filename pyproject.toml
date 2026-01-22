@@ -5,7 +5,7 @@ description = "Python geoprocessing devcontainer with GDAL and optional SNAP/sna
 readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
-    "gdal",
+    "gdal==3.10.3",  # Must match system libgdal version
     "rasterio",
     "numpy",
     "scipy",
